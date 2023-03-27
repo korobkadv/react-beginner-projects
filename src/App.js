@@ -1,55 +1,71 @@
 import React from 'react';
+import { Block } from './Block';
 import './index.scss';
-import { Success } from './components/Success';
-import { Users } from './components/Users';
-
-// Тут список пользователей: https://reqres.in/api/users
 
 function App() {
-  const [users, setUsers] = React.useState([]);
-  const [invites, setInvites] = React.useState([]);
-  const [isLoading, setLoading] = React.useState(true);
-  const [success, setSuccess] = React.useState(false);
-  const [searchValue, setSearchValue] = React.useState('');
+  const [fromCurrency, setFromCurrency] = React.useState('UAH');
+  const [toCurrency, setToCurrency] = React.useState('USD');
+  const [fromPrice, setFromPrice] = React.useState(1);
+  const [toPrice, setToPrice] = React.useState(0);
+
+  const ratesData = React.useRef({});
+  const exchangedate = React.useRef('');
+
 
   React.useEffect(() => {
-    fetch('https://reqres.in/api/users').then(res => res.json()).then((json) => {
-      setUsers(json.data);
-    }).catch(err => {
-      console.warn(err);
-      alert("Error");
-    }).finally(() => setLoading(false));
+    fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json')
+      .then((res) => res.json())
+      .then((json) => {
+
+        json.push({ "r030": 980, "txt": "Українська гривня", "rate": 1, "cc": "UAH" });
+
+        exchangedate.current = json[0].exchangedate;
+
+        const filterData = {};
+        for (const key in json) {
+          filterData[json[key].cc] = json[key].rate;
+        }
+
+        ratesData.current = filterData;
+
+        onChangeFromPrice(1);
+
+      }).catch((err) => {
+        console.warn(err);
+        alert('Error getting information');
+      });
   }, []);
 
-  const onChangeSearchValue = (event) => {
-    setSearchValue(event.target.value);
+  const onChangeFromPrice = (value) => {
+
+    const price = value * (ratesData.current[fromCurrency] / ratesData.current[toCurrency]);
+
+    setToPrice(price.toFixed(3));
+    setFromPrice(value);
+
   }
 
-  const onClickInvite = (id) => {
-    if (invites.includes(id)) {
-      setInvites((prev) => prev.filter(_id => _id !== id));
-    } else {
-      setInvites((prev) => [...prev, id]);
-    }
+  const onChangeToPrice = (value) => {
+
+    const result = value * (ratesData.current[toCurrency] / ratesData.current[fromCurrency]);
+
+    setFromPrice(result.toFixed(2));
+    setToPrice(value);
   }
 
-  const onClickSendInvites = () => {
-    setSuccess(true);
-  }
+  React.useEffect(() => {
+    onChangeFromPrice(fromPrice)
+  }, [fromCurrency]);
+
+  React.useEffect(() => {
+    onChangeFromPrice(fromPrice)
+  }, [toCurrency]);
 
   return (
-    <div className="App">
-      {
-        success ? (<Success count={invites.length} />) :
-          (<Users
-            invites={invites}
-            onClickInvite={onClickInvite}
-            onChangeSearchValue={onChangeSearchValue}
-            searchValue={searchValue}
-            items={users}
-            isLoading={isLoading}
-            onClickSendInvites={onClickSendInvites} />)
-      }
+    <div className="App"> 
+      <Block value={fromPrice} currency={fromCurrency} onChangeCurrency={setFromCurrency} onChangeValue={onChangeFromPrice} exchangedate={exchangedate.current} />
+      <Block value={toPrice} currency={toCurrency} onChangeCurrency={setToCurrency} onChangeValue={onChangeToPrice} exchangedate={exchangedate.current} />
+      Exchange date: {exchangedate.current}
     </div>
   );
 }
