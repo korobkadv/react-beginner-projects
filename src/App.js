@@ -1,71 +1,119 @@
 import React from 'react';
-import { Block } from './Block';
+import { Collection } from './Collection';
+import { OnePhoto } from './OnePhoto';
 import './index.scss';
+import dots from './3dots.gif'
+import back from './back.png'
 
 function App() {
-  const [fromCurrency, setFromCurrency] = React.useState('UAH');
-  const [toCurrency, setToCurrency] = React.useState('USD');
-  const [fromPrice, setFromPrice] = React.useState(1);
-  const [toPrice, setToPrice] = React.useState(0);
+  const [categoryId, setCategoryId] = React.useState(0);
+  const [page, setPage] = React.useState(1);
+  const [allPage, setAllPage] = React.useState(1);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [searchValue, setSearchValue] = React.useState('');
+  const [collections, setCollertions] = React.useState([]);
+  const [allCollections, setAllCollertions] = React.useState([]);
+  const [photoOnePost, setPhotoOnePost] = React.useState({});
 
-  const ratesData = React.useRef({});
-  const exchangedate = React.useRef('');
+let collect = [];
+searchValue === '' ? collect = collections : collect = allCollections;
 
+  const categories = [
+    { "name": "All" },
+    { "name": "Sea" },
+    { "name": "Mountains" },
+    { "name": "Cities" },
+    { "name": "Parks" }
+  ];
+
+  const categoriesParams = categoryId ? `category=${categoryId}` : '';
 
   React.useEffect(() => {
-    fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json')
+    setIsLoading(true);
+    fetch(`https://6421a45034d6cd4ebd787d04.mockapi.io/photos?page=${page}&limit=3&${categoriesParams}`)
       .then((res) => res.json())
       .then((json) => {
-
-        json.push({ "r030": 980, "txt": "Українська гривня", "rate": 1, "cc": "UAH" });
-
-        exchangedate.current = json[0].exchangedate;
-
-        const filterData = {};
-        for (const key in json) {
-          filterData[json[key].cc] = json[key].rate;
-        }
-
-        ratesData.current = filterData;
-
-        onChangeFromPrice(1);
-
-      }).catch((err) => {
-        console.warn(err);
-        alert('Error getting information');
+        setCollertions(json);
+      })
+      .catch((error) => {
+        console.warn(error);
+        alert('Error getting data');
+      }).finally(() => {
+        setIsLoading(false);
       });
-  }, []);
-
-  const onChangeFromPrice = (value) => {
-
-    const price = value * (ratesData.current[fromCurrency] / ratesData.current[toCurrency]);
-
-    setToPrice(price.toFixed(3));
-    setFromPrice(value);
-
-  }
-
-  const onChangeToPrice = (value) => {
-
-    const result = value * (ratesData.current[toCurrency] / ratesData.current[fromCurrency]);
-
-    setFromPrice(result.toFixed(2));
-    setToPrice(value);
-  }
+  }, [categoryId, page]);
 
   React.useEffect(() => {
-    onChangeFromPrice(fromPrice)
-  }, [fromCurrency]);
+    fetch('https://6421a45034d6cd4ebd787d04.mockapi.io/photos')
+      .then((res) => res.json())
+      .then((json) => {
+        setAllCollertions(json);
+        if (categoryId !== 0) {
+          const filterCollection = json.filter((obj) => obj.category === categoryId);
+          setAllPage(Math.ceil(filterCollection.length / 3));
+          setPage(1);
+        } else {
+          setAllPage(Math.ceil(json.length / 3));
+          setPage(1);
+        }
+      })
+      .catch((error) => {
+        console.warn(error);
+        alert('Error getting data pages');
+      });
+  }, [categoryId]);
 
   React.useEffect(() => {
-    onChangeFromPrice(fromPrice)
-  }, [toCurrency]);
+    if (searchValue) { setPage(1); }
+  }, [searchValue]);
 
   return (
-    <div className="App"> 
-      <Block value={fromPrice} currency={fromCurrency} onChangeCurrency={setFromCurrency} onChangeValue={onChangeFromPrice} exchangedate={exchangedate.current} />
-      <Block value={toPrice} currency={toCurrency} onChangeCurrency={setToCurrency} onChangeValue={onChangeToPrice} exchangedate={exchangedate.current} />
-      Exchange date: {exchangedate.current}
+    <div className="App">
+      <div className='wrapp' key={1111}>
+        {
+          !photoOnePost.photos ? (
+
+            <div className="top">
+              <ul className="tags">
+                {
+                  categories.map((obj, i) => <li onClick={() => { setCategoryId(i); setSearchValue(''); }} className={categoryId === i ? 'active' : ''} key={obj.name}>{obj.name}</li>)
+                }
+              </ul>
+              <input value={searchValue} onChange={e => { setSearchValue(e.target.value); setCategoryId(0);}} className="search-input" placeholder="Search" />
+            </div>
+
+          ) : (<div>
+            <button onClick={() => setPhotoOnePost({})} className="buttunBack" > <img src={back} alt="back" /> Back</button>
+            <h1> {photoOnePost.name} </h1>
+          </div>)
+        }
+        <div className="content">
+          {isLoading ? (<div> <h2>Loading</h2> <img src={dots} alt='3dots' className='dots' /> </div>) : (
+
+            photoOnePost.photos ? (
+              <OnePhoto photoOnePost={photoOnePost} />
+            ) : (
+              collect.filter(obj => {
+              return obj.name.toLowerCase().includes(searchValue.toLowerCase());
+            }).map((obj, index) => (
+              <div onClick={() => setPhotoOnePost(obj)} key={index}>
+                <Collection key={index}
+                  name={obj.name}
+                  images={obj.photos}
+                />
+              </div>
+            ))
+            )
+          )}
+
+        </div>
+        <ul className="pagination">
+          {
+            searchValue !== '' || photoOnePost.photos ? '' :
+              [...Array(allPage)].map((_, i) => <li className={page === i + 1 ? 'active' : ''} onClick={() => setPage(i + 1)} key={i + 1}>{i + 1}</li>)
+          }
+        </ul>
+      </div>
     </div>
   );
 }

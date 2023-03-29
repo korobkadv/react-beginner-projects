@@ -1,82 +1,195 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
 
 body {
-  background-color: #70c568;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #5BC0DE;
 }
 
 * {
-  font-family: 'Inter', system-ui !important;
   box-sizing: border-box;
-  user-select: none;
 }
 
 .App {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: 30px;
-  width: 800px;
-  margin: 100px auto;
-  background-color: #fff;
-  padding: 30px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  border-radius: 5px;
-}
-
-.block {
-  input {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    font-size: 3rem;
-    font-weight: bold;
-    padding: 20px 20px;
-    letter-spacing: 1.3px;
-    outline: none;
-    margin-top: 20px;
-    border-radius: 5px;
-    width: 100%;
-  }
-}
-
-.currencies {
+  padding: 20px;
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.wrapp {
+   max-width: 1200px;
+}
+
+h1 {
+  font-family: 'Merriweather', serif;
+  color: #FFF457;
+  margin-left: 0px;
+}
+
+h2 {
+  float: left;
+}
+
+.dots {
+  width: 75px;
+}
+
+.tags {
   list-style: none;
   padding: 0;
-  margin: 0;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  overflow: hidden;
 
   li {
-    display: inline-flex;
-    padding: 10px 20px;
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    display: inline-block;
+    padding: 12px 18px;
+    background-color: #fff;
+    border-radius: 0px;
+    margin-right: 10px;
     cursor: pointer;
-    justify-content: center;
-    flex: 1;
+    font-weight: 500;
+    font-size: 18px;
+    border: 1px solid transparent;
+    transition: all 0.15s ease-in-out;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.03);
-    }
-
-    &:active {
-      background-color: rgba(0, 0, 0, 0.05);
+      border-color: #62C462;
     }
 
     &.active {
-      background-color: #16b67f;
+      background-color: #62C462;
       color: #fff;
     }
+  }
+}
 
-    &:last-of-type {
-      display: inline-flex;
-      align-items: center;
-      flex: 0 0 50px;
-      border-right: 0;
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+  margin-top: 5px;
+  max-width: 800px;
+}
 
-      svg {
-        width: 16px;
-        height: 16px;
-      }
+.collection {
+  width: 261px;
+  margin: 5px 5px 0px 0px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 0px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+
+  h4 {
+    margin: 0;
+    margin-top: 15px;
+    font-size: 18px;
+    font-family: 'Merriweather', serif;
+  }
+
+  &:hover {
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+  }
+
+
+
+  img {
+    object-fit: cover;
+  }
+
+  &__big {
+    height: 150px;
+    width: 100%;
+    border-radius: 0px;
+    margin-bottom: 15px;
+  }
+
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__mini {
+    width: 31%;
+    height: 80px;
+    border-radius: 0px;
+  }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  border: 0px solid #000;
+}
+
+.search-input {
+  margin-left: 10px;
+  font-size: 16px;
+  width: 250px;
+  height: 50px;
+  padding: 0 15px;
+  border-radius: 0px;
+  border: 1px solid #d3ae7b;
+  outline: none;
+  transition: all 0.15s ease-in-out;
+
+  &:focus {
+    border: 2px solid #F89406;
+  }
+}
+
+.pagination {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 15px;
+
+  li {
+    display: inline-block;
+    padding: 10px 17px;
+    background-color: white;
+    font-size: 18px;
+    border-radius: 0px;
+    margin-right: 10px;
+    border: 1px solid #62C462;
+    cursor: pointer;
+
+    &.active {
+      background-color: #62C462;
+      color: #fff;
     }
   }
+}
+
+.photoOnePost {
+  width: 800px;
+}
+
+.photoOnePost img {
+  max-width: 390px;
+  background-color: #fff;
+  padding: 5px;
+  margin: 5px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.buttunBack {
+  margin: 15px 15px 0px 0px;
+  padding: 15px 30px;
+  background-color: #F89406;
+  font-size: 24px;
+  border: 1px solid #62C462;
+  cursor: pointer;
+  color: #fff;
+}
+
+.buttunBack:hover {
+  background-color: #ff9f18;
 }
