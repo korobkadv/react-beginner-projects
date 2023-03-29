@@ -21,7 +21,7 @@ body {
 }
 
 .wrapp {
-   max-width: 1200px;
+   width: 800px;
 }
 
 h1 {
@@ -41,6 +41,7 @@ h2 {
 .tags {
   list-style: none;
   padding: 0;
+  
 
   li {
     display: inline-block;
@@ -48,6 +49,7 @@ h2 {
     background-color: #fff;
     border-radius: 0px;
     margin-right: 10px;
+    margin-top: 5px;
     cursor: pointer;
     font-weight: 500;
     font-size: 18px;
@@ -78,7 +80,6 @@ h2 {
   margin: 5px 5px 0px 0px;
   background-color: #fff;
   padding: 10px;
-  border-radius: 0px;
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
   cursor: pointer;
   transition: all 0.15s ease-in-out;
@@ -126,22 +127,20 @@ h2 {
   justify-content: space-between;
   flex-wrap: wrap;
   width: 100%;
-  border: 0px solid #000;
 }
 
 .search-input {
-  margin-left: 10px;
+  margin-right: 5px;
+  margin-top: 5px;
   font-size: 16px;
-  width: 250px;
+  width: 261px;
   height: 50px;
   padding: 0 15px;
-  border-radius: 0px;
   border: 1px solid #d3ae7b;
   outline: none;
-  transition: all 0.15s ease-in-out;
 
   &:focus {
-    border: 2px solid #F89406;
+    border: 1px solid #F89406;
   }
 }
 

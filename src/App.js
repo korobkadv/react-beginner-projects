@@ -69,7 +69,7 @@ searchValue === '' ? collect = collections : collect = allCollections;
 
   return (
     <div className="App">
-      <div className='wrapp' key={1111}>
+      <div className='wrapp'>
         {
           !photoOnePost.photos ? (
 
@@ -96,7 +96,7 @@ searchValue === '' ? collect = collections : collect = allCollections;
               collect.filter(obj => {
               return obj.name.toLowerCase().includes(searchValue.toLowerCase());
             }).map((obj, index) => (
-              <div onClick={() => setPhotoOnePost(obj)} key={index}>
+              <div className="collection" onClick={() => setPhotoOnePost(obj)} key={index}>
                 <Collection key={index}
                   name={obj.name}
                   images={obj.photos}
